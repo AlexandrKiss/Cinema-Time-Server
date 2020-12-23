@@ -19,13 +19,14 @@ import java.util.Map;
 @Slf4j
 public class VkinoRepository {
     private final String VKINO = "https://vkino.com.ua";
-    private final String FILMS_LIST = "/ua/filter/ajax-showtimes?cinema=olymp";
+    private final String CINEMA = "kinotema-neoplaza";
+    private final String FILMS_LIST = "/ua/filter/ajax-showtimes?cinema=";
 
     @SuppressWarnings("unchecked")
     public List<Movie> getFilmsList() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> map = mapper.readValue(new URL(VKINO+FILMS_LIST), Map.class);
+            Map<String, Object> map = mapper.readValue(new URL(VKINO+FILMS_LIST+CINEMA), Map.class);
             Elements elements = Jsoup.parse((String) map.get("result"))
                     .normalise()
                     .getElementsByClass("tab-1");
