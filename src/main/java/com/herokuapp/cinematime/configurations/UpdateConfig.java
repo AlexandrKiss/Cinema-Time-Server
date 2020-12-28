@@ -1,6 +1,7 @@
 package com.herokuapp.cinematime.configurations;
 
 import com.herokuapp.cinematime.model.*;
+import com.herokuapp.cinematime.repositories.VkinoRep;
 import com.herokuapp.cinematime.repositories.VkinoRepository;
 import com.herokuapp.cinematime.services.CinemaService;
 import com.herokuapp.cinematime.services.MovieService;
@@ -22,20 +23,24 @@ public class UpdateConfig {
     final private MovieService movieService;
     final private SessionService sessionService;
     final private VkinoRepository vkinoRepository;
+    final private VkinoRep vkinoRep;
 
     public UpdateConfig(CinemaService cinemaService,
                         MovieService movieService,
                         SessionService sessionService,
-                        VkinoRepository vkinoRepository) {
+                        VkinoRepository vkinoRepository, VkinoRep vkinoRep) {
         this.cinemaService = cinemaService;
         this.movieService = movieService;
         this.sessionService = sessionService;
         this.vkinoRepository = vkinoRepository;
+        this.vkinoRep = vkinoRep;
     }
 
     @Bean
     public CommandLineRunner firstRun() {
-        return strings -> updateFilmsList();
+        return strings -> {
+            updateFilmsList();
+        };
     }
 
     @Scheduled(cron = "${scheduler.cron}")
@@ -47,7 +52,7 @@ public class UpdateConfig {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-        List<Movie> movies = vkinoRepository.getFilmsList();
+        List<Movie> movies = vkinoRep.getFilmsList();
 
         if (movies==null) {
             return;
@@ -72,7 +77,7 @@ public class UpdateConfig {
             sessionService.addSession(new Session(timeFormat.format(new Date()), hall, dateSession));
         }
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 2; i++) {
             for (int j = 1; j <= 2; j++) {
                 switch (i){
                     case 1: seats.add(new Seat(j, i, hall, economy));

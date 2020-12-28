@@ -19,11 +19,11 @@ import java.util.Map;
 @Slf4j
 public class VkinoRepository {
     private final String VKINO = "https://vkino.com.ua";
-    private final String CINEMA = "kinotema-neoplaza";
-    private final String FILMS_LIST = "/ua/filter/ajax-showtimes?cinema=";
 
     @SuppressWarnings("unchecked")
     public List<Movie> getFilmsList() {
+        final String CINEMA = "kinotema-neoplaza";
+        final String FILMS_LIST = "/ua/filter/ajax-showtimes?cinema=";
         try {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = mapper.readValue(new URL(VKINO+FILMS_LIST+CINEMA), Map.class);
