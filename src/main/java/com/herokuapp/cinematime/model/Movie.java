@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.jsoup.nodes.Element;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,6 +23,8 @@ public class Movie {
     @Lob
     private String description;
     private String trailer;
+    @Transient
+    private Element data;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "movie")

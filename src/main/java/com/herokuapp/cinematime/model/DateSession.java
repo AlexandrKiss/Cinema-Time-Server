@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.jsoup.nodes.Element;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,10 @@ public class DateSession {
     private Long id;
 
     private String date;
+
+    @Transient
+    private Element data;
+
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "dateSession")
     @Fetch(FetchMode.SUBSELECT)

@@ -22,17 +22,15 @@ public class UpdateConfig {
     final private CinemaService cinemaService;
     final private MovieService movieService;
     final private SessionService sessionService;
-    final private VkinoRepository vkinoRepository;
     final private VkinoRep vkinoRep;
 
     public UpdateConfig(CinemaService cinemaService,
                         MovieService movieService,
                         SessionService sessionService,
-                        VkinoRepository vkinoRepository, VkinoRep vkinoRep) {
+                        VkinoRep vkinoRep) {
         this.cinemaService = cinemaService;
         this.movieService = movieService;
         this.sessionService = sessionService;
-        this.vkinoRepository = vkinoRepository;
         this.vkinoRep = vkinoRep;
     }
 
@@ -71,10 +69,18 @@ public class UpdateConfig {
         for (Movie movie: movies) {
             movieService.addMovie(movie);
 
-            DateSession dateSession = new DateSession(dateFormat.format(new Date()), movie);
-            sessionService.addDateSession(dateSession);
+            List<DateSession> datesSessions = vkinoRep.getDatesSession(movie);
+            for (DateSession dateSession: datesSessions) {
+                sessionService.addDateSession(dateSession);
 
-            sessionService.addSession(new Session(timeFormat.format(new Date()), hall, dateSession));
+                List<Session> sessions = vkinoRep.getSession(hall, dateSession);
+                for (Session session: sessions)
+                    sessionService.addSession(session);
+            }
+//            DateSession dateSession = new DateSession(dateFormat.format(new Date()), movie);
+//            sessionService.addDateSession(dateSession);
+
+//            sessionService.addSession(new Session(timeFormat.format(new Date()), hall, dateSession));
         }
 
         for (int i = 1; i <= 2; i++) {
